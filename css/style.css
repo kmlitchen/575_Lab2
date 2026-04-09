@@ -9,7 +9,7 @@
 .map {
     border: thin solid #1b1a1a;
     margin: 10px 0 0 20px;
-    background:#d5dffc;
+    background:#d9dbd5; /*#d5dffc*/
 }
 
 /* text style - from activity 8, just for safe-keeping*/
