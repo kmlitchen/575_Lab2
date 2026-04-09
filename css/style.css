@@ -1,15 +1,15 @@
 
 /*Activity 9*/
-.us {
+.state {
     fill: #bdc7b3; 
-    stroke: #757575;
-    stroke-width: 1px;
+    stroke: #1b1a1a;
+    stroke-width: 0.35px;
 }
 
 .map {
-    border: medium solid #999;
+    border: thin solid #1b1a1a;
     margin: 10px 0 0 20px;
-    background:#a9b4ca;
+    background:#d5dffc;
 }
 
 /* text style - from activity 8, just for safe-keeping*/
