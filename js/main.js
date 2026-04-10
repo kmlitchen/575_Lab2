@@ -1,6 +1,6 @@
 // Activity 10 ~
 
-// wrap the whole thing up for safe keeping:
+// wrap the whole thing tight for safe keeping:
 (function () { 
 
 	// define attributes in pseudo-global scope:
@@ -13,24 +13,24 @@
     // make the map:
     function setMap() {
         // map frame: 
-        var width = 960,
+        var width = window.innerWidth * 0.45,
             height = 460;
 
         // map svg container:
         var map = d3
             .select("body")
             .append("svg")
-            .attr("class", "map")
+            .attr("class", "map") // define class
             .attr("width", width)
             .attr("height", height);
 
         // set projection (albers equal area conic for contiguous US):
         var projection = d3
             .geoAlbers()
-            .center([-16, 40])
+            .center([-13.5, 40])
             .rotate([85.5, 2.5, 3.1])
             .parallels([8.41, 47.50])
-            .scale(900)
+            .scale(650)
             .translate([width / 2, height / 2]);
 
         var path = d3.geoPath().projection(projection);
@@ -45,18 +45,16 @@
         function callback(data) {
             var csvData = data[0],
                 statesData = data[1];
-                console.log(csvData);
-                console.log(statesData);
 
             // translate topojson:
-            // still not sure what my plan is for AK and HI yet
+            // still not sure what my plan is for AK and HI yet - remove or make them containers.. ugh
             var States = topojson.feature(statesData, statesData.objects.usStates).features;
-            console.log(States);
             
-            // calling fx below:
+            // calling ea fx below:
             States = joinData(States, csvData);
             var colorScale = makeColorScale(csvData);  
             setEnumerationUnits(States, map, path, colorScale);
+            setChart(csvData, colorScale);
         }
     }
 
@@ -99,37 +97,126 @@
         var colorScale = d3.scaleQuantile()
             .range(colorClasses);
 
-        //build two-value array of minimum and maximum expressed attribute values
+        // min/max for equal interval
         var minmax = [
             d3.min(data, function(d) { return parseFloat(d[expressed]); }),
             d3.max(data, function(d) { return parseFloat(d[expressed]); })
         ];
-        //assign two-value array as scale domain
         colorScale.domain(minmax);
 
         return colorScale;
-};
+    };
 
+    // fill states by color scale:
 	function setEnumerationUnits(States, map, path, colorScale) {
-		// voila -> put states on map + fill by attribute
+		// voila -> put states on map + fill by expressed attribute:
 		var states = map
-			.selectAll(".state")
+			.selectAll(".state") 
 			.data(States)
 			.enter()
 			.append("path")
 			.attr("class", function (d) {
-				return "state " + d.properties.St_abbr;
+				return "state " + d.properties.St_abbr; // define class
 			})
 			.attr("d", path)
 			.style("fill", function (d) {
-				//check to make sure a data value exists, if not set color to gray
-				var value = d.properties[expressed];            
-				if(value) {            	
-					return colorScale(d.properties[expressed]);            
-				} else {            	
-					return "#ccc";            
-				}    
+				var value = d.properties[expressed];                        	
+				return colorScale(d.properties[expressed]);             
 			})
 	}
+
+    // coordinated bar chart: 
+	function setChart(csvData, colorScale) {
+		// chart dimensions:
+		var chartWidth = window.innerWidth * 0.45,
+			chartHeight = 460;
+            leftPadding = 33, // i feel like there's a better way to do this
+            rightPadding = 2,
+            topBottomPadding = 10,
+            chartInnerWidth = chartWidth - leftPadding - rightPadding,
+            chartInnerHeight = chartHeight - topBottomPadding * 2,
+            translate = "translate(" + leftPadding + "," + topBottomPadding + ")";
+
+		// svg for entire bar chart:
+		var chart = d3.select("body")
+			.append("svg")
+			.attr("width", chartWidth)
+			.attr("height", chartHeight)
+			.attr("class", "chart"); // define class
+
+        // inner chart rectangle:
+        var chartBackground = chart.append("rect")
+            .attr("class", "chartBackground") // define class
+            .attr("width", chartInnerWidth)
+            .attr("height", chartInnerHeight)
+            .attr("transform", translate);
+	
+		// scale y-axis proportional to inner rectangle:
+        var yScale = d3.scaleLinear()
+            .range([chartInnerHeight, 0])
+            .domain([0, 1200]);
+
+        // make bars + set values: 
+        var bars = chart.selectAll(".bars") // may flip to hz bar chart
+            .data(csvData)
+            .enter()
+            .append("rect")
+            .sort(function(a, b){
+                return a[expressed]-b[expressed] // sorting L -> H
+            })
+            .attr("class", function(d){         
+                return "bars " + d.St_Abbr; // define class
+            })
+            .attr("width", chartInnerWidth / csvData.length - 1) // width of ea bar
+            .attr("x", function(d, i){
+                return i * (chartInnerWidth / csvData.length) + leftPadding; // x-pos of ea bar
+            })
+            .attr("height", function(d){ 
+                return chartInnerHeight - yScale(parseFloat(d[expressed])) + topBottomPadding; // height of ea bar
+            })
+            .attr("y", function(d){
+                return yScale(parseFloat(d[expressed]));; // y-pos (bottom-aligned)
+            })
+            .style("fill", function(d){
+                return colorScale(d[expressed]);
+            });
+
+        // bar annotations - state names: 
+        var numbers = chart.selectAll(".labels") // these look bad but idc rn
+            .data(csvData)
+            .enter()
+            .append("text")
+            .sort(function(a, b){
+                return a[expressed]-b[expressed] // sorting L -> H
+            })
+            .attr("class", function(d){ 
+                return "labels " + d.St_Abbr;   // define class
+            })
+            .attr("text-anchor", "middle") // center
+            .attr("x", function(d, i){
+                var fraction = chartInnerWidth / csvData.length;
+                return (i * fraction + (fraction - 1) / 2) + leftPadding; // match x-pos of ea bar
+            })
+            .attr("y", function(d){
+                return yScale(parseFloat(d[expressed])) + 15; // match y-pos + scoot down onto bar
+            })
+            .text(function(d){
+                return d.St_Abbr; // label w/ state name
+            });
+
+        // chart title: 
+        var chartTitle = chart.append("text")
+            .attr("x", chartInnerWidth/5)
+            .attr("y", chartHeight/10)
+            .attr("class", "chartTitle") // define class
+            .text("Overall Incarceration Rate by State");	
+
+        // y axis: 
+        var yAxisScale = d3.axisLeft().scale(yScale);
+        var yaxis = chart.append("g")
+            .attr("class", "axis") // define class
+            .attr("transform", translate)
+            .call(yAxisScale);
+    };
 
 })();

@@ -1,33 +1,61 @@
 
-/*Activity 9*/
+/***** website things: *****/
+/* page background */
+body {
+  background-color: #bdc7b3; 
+}
+
+/***** map things *****/
+/* us states */
 .state {
-    fill: #bdc7b3; 
+    /*fill: #bdc7b3; */
     stroke: #1b1a1a;
     stroke-width: 0.35px;
 }
-
+/* map frame */
 .map {
     border: thin solid #1b1a1a;
-    margin: 10px 0 0 20px;
-    background:#d9dbd5; /*#d5dffc*/
+    background:#494949; /*#d5dffc #d9dbd5 */
+    margin: 1.5% 0 0 2.5%;
+    float: left;
 }
 
-/* text style - from activity 8, just for safe-keeping*/
+/***** chart things: *****/
+/* chart - whole/outer frame */
+.chart {
+    border: thin solid #1b1a1a;
+    background-color: #494949;
+    margin: 1.5% 2.5% 0 0;
+    float: right;
+}
+/* chart - inner frame */
+.chartBackground {
+    fill: #494949
+}
+/* title */
+.chartTitle {
+    fill: #1f1c1c;
+    font-family: sans-serif;
+    font-size: 1em;
+    font-weight: bold;
+}
+/* state labels */
+.labels {
+    fill: #1f1c1c;
+    font-family: sans-serif;
+    font-size: 0.33em;
+    font-weight: lighter;
+}
+/* y-axis */
 .axis path,
 .axis line {
     fill: none;
-    stroke: black;
+    stroke: #1f1c1c;
     stroke-width: 1px;
     shape-rendering: crispEdges;
 }
-
 .axis text {
+    fill: #1f1c1c;
     font-family: sans-serif;
     font-size: 0.9em;
-}
-
-.title {
-    font-family: sans-serif;
-    font-size: 1.5em;
-    font-weight: bold;
 }
