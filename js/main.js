@@ -63,7 +63,7 @@
 		// loop through csv, for each item define primary key:
 		for (var i = 0; i < csvData.length; i++) {
 			var csvState = csvData[i]; // current state
-			var csvKey = csvState.St_Abbr; // CSV primary key
+			var csvKey = csvState.St_Abbr; // csv primary key
 
 			// loop through geojson, for each set primary key: 
 			for (var a = 0; a < States.length; a++) {
@@ -116,7 +116,7 @@
 			.enter()
 			.append("path")
 			.attr("class", function (d) {
-				return "state " + d.properties.St_abbr; // define class
+				return "state " + d.properties.state_abbr; // define class
 			})
 			.attr("d", path)
 			.style("fill", function (d) {

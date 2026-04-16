@@ -5,12 +5,12 @@ body {
   background-color: #bdc7b3; 
 }
 
-/***** map things *****/
+/***** map things: *****/
 /* us states */
 .state {
     /*fill: #bdc7b3; */
     stroke: #1b1a1a;
-    stroke-width: 0.35px;
+    stroke-width: 0.5px;
 }
 /* map frame */
 .map {
