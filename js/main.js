@@ -7,6 +7,9 @@
 	var attrArray = ["Rate_All","Rate_WT","Ratio_WT_ST","Rate_BK","Ratio_BK_ST","Ratio_BK_WT"]; 
 	var expressed = attrArray[0]; // set default to first attribute
 
+
+
+
     // chart dimensions:
 	var chartWidth = window.innerWidth * 0.45,
 		chartHeight = 460;
@@ -23,6 +26,7 @@
         .domain([0, 1200]);
 
 
+        
 
     // execute fx on load:
     window.onload = setMap();
@@ -276,35 +280,32 @@
         });
 
         //******//Sort, resize, and recolor bars
-        var bars = d3.selectAll(".bar")
+        var bars = d3.selectAll(".bars")
             //Sort bars
             .sort(function(a, b){
-                return b[expressed] - a[expressed];
+                return a[expressed] - b[expressed];
             })
-            .attr("width", chartInnerWidth / csvData.length - 1) // width of ea bar
-            .attr("x", function(d, i){
-                return i * (chartInnerWidth / csvData.length) + leftPadding; // x-pos of ea bar
-            })
-            .attr("height", function(d){ 
-                return chartInnerHeight - yScale(parseFloat(d[expressed])) + topBottomPadding; // height of ea bar
-            })
-            .attr("y", function(d){
-                return yScale(parseFloat(d[expressed]));; // y-pos (bottom-aligned)
-            })
-            .style("fill", function(d){
-                return colorScale(d[expressed]);
-            });
-
-
-
-
+            updateChart(bars, csvData.length, colorScale);
 
 
 
     }
 
 
-
+    function updateChart(bars, n, colorScale){
+        bars.attr("x", function(d, i){
+            return i * (chartInnerWidth / n) + leftPadding; // x-pos of ea bar
+        })
+        .attr("height", function(d){ 
+            return chartInnerHeight - yScale(parseFloat(d[expressed])) + topBottomPadding; // height of ea bar
+        })
+        .attr("y", function(d){
+            return yScale(parseFloat(d[expressed]));; // y-pos (bottom-aligned)
+        })
+        .style("fill", function(d){
+            return colorScale(d[expressed]);
+        });
+    }
 
 
 
