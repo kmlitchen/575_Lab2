@@ -1,4 +1,4 @@
-St_Name,St_Abbr,Rate_All,Rate_WT,Ratio_WT_ST,Rate_BK,Ratio_BK_ST,Ratio_BK_WT
+St_Name,state_abbr,Rate_All,Rate_WT,Ratio_WT_ST,Rate_BK,Ratio_BK_ST,Ratio_BK_WT
 Massachusetts,MA,241,53,0.22,383,1.59,7.28
 Vermont,VT,245,187,0.76,1622,6.62,8.66
 Rhode Island,RI,254,115,0.45,1086,4.28,9.44
