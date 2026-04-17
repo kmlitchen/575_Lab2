@@ -3,24 +3,23 @@
 // wrap the whole thing tight for safe keeping:
 (function () { 
 
-	// define attributes in pseudo-global scope:
+	// define pseudo-global attributes in pseudo-global scope:
 	var attrArray = ["Rate_All","Rate_WT","Ratio_WT_ST","Rate_BK","Ratio_BK_ST","Ratio_BK_WT"]; 
 	var expressed = attrArray[0]; // set default to first attribute
-    
-    // chart dimensions:
-	var chartWidth = window.innerWidth * 0.45,
-		chartHeight = 460;
-        leftPadding = 33, // i feel like there's a better way to do this
-        rightPadding = 2,
-        topBottomPadding = 10,
-        chartInnerWidth = chartWidth - leftPadding - rightPadding,
-        chartInnerHeight = chartHeight - topBottomPadding * 2,
-        translate = "translate(" + leftPadding + "," + topBottomPadding + ")";
+        // chart dimensions:
+	    var chartWidth = window.innerWidth * 0.45,
+		    chartHeight = 460;
+            leftPadding = 33, 
+            rightPadding = 2,
+            topBottomPadding = 10,
+            chartInnerWidth = chartWidth - leftPadding - rightPadding,
+            chartInnerHeight = chartHeight - topBottomPadding * 2,
+            translate = "translate(" + leftPadding + "," + topBottomPadding + ")";
 
-    // execute fx on load:
+    // map map map! on load:
     window.onload = setMap();
 
-    // make the map:
+    // make the map -> promise, callback: (onload)
     function setMap() {
         // map frame: 
         var width = window.innerWidth * 0.45,
@@ -69,7 +68,7 @@
         }
     }
 
-    // join attribute data + geojson:
+    // join attribute data + geojson: (callback fx)
     function joinData(States, csvData) {
 		// loop through csv, for each item define primary key:
 		for (var i = 0; i < csvData.length; i++) {
@@ -93,7 +92,7 @@
 		return States;
 	}
 
-    // make color scale:
+    // make color scale: (callback fx)
 	function makeColorScale(data){
 		var colorClasses = [
 			"#fee5d9",
@@ -118,7 +117,7 @@
         return colorScale;
     };
 
-    // fill states by color scale:
+    // fill states by color scale: (callback fx)
 	function setEnumerationUnits(States, map, path, colorScale) {
 		// voila -> put states on map + fill by expressed attribute:
 		var states = map
@@ -139,10 +138,10 @@
             })
             .on("mouseout", function(event, d){
                 dehighlight(d.properties);
-            }); 
+            }) 
 	}
 
-    // make attribute drop-down:
+    // make attribute drop-down: (callback fx)
     function createDropdown(csvData){
         // select by attribute: 
         var dropdown = d3.select("body")
@@ -167,7 +166,7 @@
             .text(function(d){ return d });
     };
 
-    // event handler for updating attribute in dropdown: 
+    // event handler for updating attribute in dropdown: (createDropdown fx)
     function changeAttribute(attribute, csvData) {
         //change the expressed attribute
         expressed = attribute;
@@ -213,7 +212,7 @@
         updateChart(bars, csvData, colorScale, labels)
         }
 
-    // make coordinated bar chart - set initial view: 
+    // make coordinated bar chart - set initial view: (callback fx)
 	function setChart(csvData, colorScale) {
 
         // scale y-axis proportional to inner rectangle:
@@ -254,6 +253,7 @@
             .on("mouseout", function(event, d){
                 dehighlight(d);
             })
+            //.on("click", moveLabel);
 
         // make bar labels -> state names w/ update fx: 
         var labels = chart.selectAll(".labels") // these look bad but idc rn
@@ -285,7 +285,7 @@
         updateChart(bars, csvData, colorScale, labels)
     };
 
-    // fx to update mutable bar chart elements by attribute:
+    // update mutable chart elements by attribute: (changeAttribute + setChart fxs)
     function updateChart(bars, csvData, colorScale, labels){
 
         // scale y-axis proportional to inner rectangle:
@@ -332,27 +332,34 @@
             .call(yAxisScale);
     }
 
-    //function to highlight enumeration units and bars
+    // highlight enumeration units and bars: (setEnumerationUnits + setChart fxs)
     function highlight(props){
-    //change stroke
+        // remove previous label: (i.e. if you click the same state again)
+        d3.select(".infolabel")
+            .remove();
+        // reset to current label:
+        setLabel(props)
+
+        // style by class:
         var selected = d3.selectAll("." + props.state_abbr)
             .attr("class", function (d) {
-                //get current list of classes for each element
+                // class list for ea element:
                 let elemClasses = this.classList;
-                //add 'selected` to classList
-                elemClasses += " selected";
+                // add "selected": 
+                elemClasses += " selected"; // define class
                 return elemClasses;
             })
-        //bring element to front
+        // raises selected element: (consistent boarders, etc.)
         selected.raise();
     };
 
-    //function to reset the element style on mouseout
+    // dehighlight enumeration units and bars: (setEnumerationUnits + setChart fxs)
     function dehighlight(props) {
-        // remove label
-        //d3.select(".infolabel")
-            //.remove();
-        //change stroke
+        // remove previous label:
+        d3.select(".infolabel")
+            .remove();
+
+        // un-style by class:
         var selected = d3.selectAll("." + props.state_abbr)
             .attr("class", function () {
                 //get current list of classes for each element
@@ -363,6 +370,37 @@
             })
     };
 
+    // attribute value pop-ups: (highlight fx)
+    function setLabel(props){
+
+        // label content:
+        var labelAttribute = "<h1>" + props[expressed] +
+            "</h1><b>" + expressed + "</b>";
+
+        // make infolabel div:
+        var infolabel = d3.select("body")
+            .append("div")
+            .attr("class", "infolabel")
+            .attr("id", props.state_abbr + "_label")
+            .html(labelAttribute)
+
+        // label positioning: (width by screen bound)
+        var labelWidth = d3.select(".infolabel")
+        .node()
+        .getBoundingClientRect()
+        .width;
+        // (x,y) pos var: 
+        var x1 = event.clientX + 10,
+            y1 = event.clientY - 75,
+            x2 = event.clientX - labelWidth - 10,
+            y2 = event.clientY + 25;
+        // set (x,y) relative to event loc: (adjust for overflow)
+        var x = event.clientX > window.innerWidth - labelWidth - 20 ? x2 : x1; 
+        var y = event.clientY < 75 ? y2 : y1;      
+        // place label pos:
+        infolabel.style("left", x + "px")
+        infolabel.style("top", y + "px")
+    };
 
 
 
