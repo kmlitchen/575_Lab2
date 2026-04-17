@@ -8,6 +8,7 @@ body {
 /***** dropdown things: *****/
 .dropdown {
     position: absolute;
+    background-color:#666666;
     top: 30px;
     left: 40px;
     z-index: 10;
@@ -15,8 +16,8 @@ body {
     font-size: 1em;
     font-weight: bold;
     padding: 2px;
-    border: 1px solid #999;
-    box-shadow: 2px 2px 4px #999;
+    border: 1.5px solid #1f1c1c;
+    box-shadow: 2px 2px 2px #1f1c1c46;
 }
 
 option {

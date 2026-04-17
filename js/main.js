@@ -136,7 +136,7 @@
 			})        
 	}
 
-    // make attribute drop-down
+    // make attribute drop-down:
     function createDropdown(csvData){
         // select by attribute: 
         var dropdown = d3.select("body")
@@ -161,72 +161,7 @@
             .text(function(d){ return d });
     };
 
-    // coordinated bar chart: 
-	function setChart(csvData, colorScale) {
-
-        // scale y-axis proportional to inner rectangle:
-        var yScale = d3.scaleLinear()
-            .range([chartInnerHeight, 0])
-            .domain([0, d3.max(csvData, function(d) { return parseFloat(d[expressed])})]);
-        var yAxisScale = d3.axisLeft().scale(yScale);
-		
-		// svg for entire bar chart:
-		var chart = d3.select("body")
-			.append("svg")
-			.attr("width", chartWidth)
-			.attr("height", chartHeight)
-			.attr("class", "chart"); // define class
-
-        // inner chart rectangle:
-        var chartBackground = chart.append("rect")
-            .attr("class", "chartBackground") // define class
-            .attr("width", chartInnerWidth)
-            .attr("height", chartInnerHeight)
-            .attr("transform", translate);
-
-        // make bars + set values: 
-        var bars = chart.selectAll(".bars") // may flip to hz bar chart
-            .data(csvData)
-            .enter()
-            .append("rect")
-            .sort(function(a, b){
-                return a[expressed]-b[expressed] // sorting L -> H
-            })
-            .attr("class", function(d){         
-                return "bars " + d.state_abbr; // define class
-            })
-            .attr("width", chartInnerWidth / csvData.length -0.5) // width of ea bar
-            updateChart(bars, csvData, colorScale)
-
-        // bar annotations - state names: 
-        var labels = chart.selectAll(".labels") // these look bad but idc rn
-            .data(csvData)
-            .enter()
-            .append("text")
-            .sort(function(a, b){
-                return a[expressed]-b[expressed] // sorting L -> H
-            })
-            .attr("class", function(d){ 
-                return "labels " + d.state_abbr;   // define class
-            })
-            .attr("text-anchor", "middle") // center
-            updateLabels(labels, csvData)
-
-        // chart title: 
-        var chartTitle = chart.append("text")
-            .attr("x", chartInnerWidth/5)
-            .attr("y", chartHeight/10)
-            .attr("class", "chartTitle") // define class
-            .text(expressed + " by State");	
-
-        // y axis: 
-        var yaxis = chart.append("g")
-            .attr("class", "axis") // define class
-            .attr("transform", translate)
-            .call(yAxisScale);
-    };
-
-    //dropdown change event handler
+    // event handler for updating attribute in dropdown: 
     function changeAttribute(attribute, csvData) {
         //change the expressed attribute
         expressed = attribute;
@@ -258,7 +193,6 @@
                 return i * 20
             })
             .duration(200);
-            updateChart(bars, csvData, colorScale);
 
         var labels = d3.selectAll(".labels")
             .sort(function(a, b){
@@ -269,10 +203,78 @@
                 return i * 20
             })
             .duration(200)
-            updateLabels(labels, csvData)
+
+        updateChart(bars, csvData, colorScale, labels)
         }
 
-    function updateChart(bars, csvData, colorScale){
+    // make coordinated bar chart - set initial view: 
+	function setChart(csvData, colorScale) {
+
+        // scale y-axis proportional to inner rectangle:
+        var yScale = d3.scaleLinear()
+            .range([chartInnerHeight, 0])
+            .domain([0, d3.max(csvData, function(d) { return parseFloat(d[expressed])})]);
+        var yAxisScale = d3.axisLeft().scale(yScale);
+		
+		// svg for entire bar chart:
+		var chart = d3.select("body")
+			.append("svg")
+			.attr("width", chartWidth)
+			.attr("height", chartHeight)
+			.attr("class", "chart"); // define class
+
+        // inner chart rectangle:
+        var chartBackground = chart.append("rect")
+            .attr("class", "chartBackground") // define class
+            .attr("width", chartInnerWidth)
+            .attr("height", chartInnerHeight)
+            .attr("transform", translate);
+
+        // make bars -> add values w/ update fx: 
+        var bars = chart.selectAll(".bars") // may flip to hz bar chart
+            .data(csvData)
+            .enter()
+            .append("rect")
+            .sort(function(a, b){
+                return a[expressed]-b[expressed] // sorting L -> H
+            })
+            .attr("class", function(d){         
+                return "bars " + d.state_abbr; // define class
+            })
+            .attr("width", chartInnerWidth / csvData.length -0.5) // width of ea bar
+
+        // make bar labels -> state names w/ update fx: 
+        var labels = chart.selectAll(".labels") // these look bad but idc rn
+            .data(csvData)
+            .enter()
+            .append("text")
+            .sort(function(a, b){
+                return a[expressed]-b[expressed] // sorting L -> H
+            })
+            .attr("class", function(d){ 
+                return "labels " + d.state_abbr;   // define class
+            })
+            .attr("text-anchor", "middle") // center
+
+        // chart title: 
+        var chartTitle = chart.append("text")
+            .attr("x", chartInnerWidth/5)
+            .attr("y", chartHeight/10)
+            .attr("class", "chartTitle") // define class
+            .text(expressed + " by State");	
+
+        // y-axis: 
+        var yaxis = chart.append("g")
+            .attr("class", "axis") // define class
+            .attr("transform", translate)
+            .call(yAxisScale);
+
+        // set mutable values via update fx:
+        updateChart(bars, csvData, colorScale, labels)
+    };
+
+    // fx to update mutable bar chart elements by attribute:
+    function updateChart(bars, csvData, colorScale, labels){
 
         // scale y-axis proportional to inner rectangle:
         var yScale = d3.scaleLinear()
@@ -281,6 +283,7 @@
 
         var yAxisScale = d3.axisLeft().scale(yScale);
 
+        // call class for bar chart bars, labels -> set features per current attribute:
         bars
         .attr("x", function(d, i){
             return i * (chartInnerWidth / csvData.length) + leftPadding; // x-pos of ea bar
@@ -295,24 +298,6 @@
             return colorScale(d[expressed]);
         });
 
-        var chartTitle = d3.select(".chartTitle")
-            .text(expressed + " by State");
-
-        var yaxis = d3.select(".axis") 
-            .attr("transform", translate)
-            .call(yAxisScale);
-        
-    }
-
-    function updateLabels(labels, csvData){
-
-        // scale y-axis proportional to inner rectangle:
-        var yScale = d3.scaleLinear()
-            .range([chartInnerHeight, 0])
-            .domain([0, d3.max(csvData, function(d) { return parseFloat(d[expressed])})]);
-
-        var yAxisScale = d3.axisLeft().scale(yScale);
-
         labels
         .attr("x", function(d, i){
             var fraction = chartInnerWidth / csvData.length;
@@ -324,6 +309,14 @@
         .text(function(d){
             return d.state_abbr; // label w/ state name
         });
+
+        // set title by current attribute:
+        var chartTitle = d3.select(".chartTitle")
+            .text(expressed + " by State");
+        // set y-axis by current attribute scale:
+        var yaxis = d3.select(".axis") 
+            .attr("transform", translate)
+            .call(yAxisScale);
     }
 
 })();
