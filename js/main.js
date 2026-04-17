@@ -133,7 +133,13 @@
 			.style("fill", function (d) {
 				var value = d.properties[expressed];                        	
 				return colorScale(d.properties[expressed]);             
-			})        
+			})    
+            .on("click", function(event, d){
+                highlight(d.properties);
+            })
+            .on("mouseout", function(event, d){
+                dehighlight(d.properties);
+            }); 
 	}
 
     // make attribute drop-down:
@@ -242,6 +248,12 @@
                 return "bars " + d.state_abbr; // define class
             })
             .attr("width", chartInnerWidth / csvData.length -0.5) // width of ea bar
+            .on("click", function(event, d){
+                highlight(d);
+            })
+            .on("mouseout", function(event, d){
+                dehighlight(d);
+            })
 
         // make bar labels -> state names w/ update fx: 
         var labels = chart.selectAll(".labels") // these look bad but idc rn
@@ -252,7 +264,7 @@
                 return a[expressed]-b[expressed] // sorting L -> H
             })
             .attr("class", function(d){ 
-                return "labels " + d.state_abbr;   // define class
+                return "labels " //+ d.state_abbr;   // define class
             })
             .attr("text-anchor", "middle") // center
 
@@ -304,7 +316,8 @@
             return (i * fraction + (fraction - 1) / 2) + leftPadding; // match x-pos of ea bar
         })
         .attr("y", function(d){
-            return yScale(parseFloat(d[expressed])) + 18; // match y-pos + scoot down onto bar
+            return yScale(parseFloat(d[expressed])) + topBottomPadding - 2//chartInnerHeight + 1.5 * topBottomPadding 
+             ; // match y-pos + scoot down onto bar
         })
         .text(function(d){
             return d.state_abbr; // label w/ state name
@@ -318,5 +331,43 @@
             .attr("transform", translate)
             .call(yAxisScale);
     }
+
+    //function to highlight enumeration units and bars
+    function highlight(props){
+    //change stroke
+        var selected = d3.selectAll("." + props.state_abbr)
+            .attr("class", function (d) {
+                //get current list of classes for each element
+                let elemClasses = this.classList;
+                //add 'selected` to classList
+                elemClasses += " selected";
+                return elemClasses;
+            })
+        //bring element to front
+        selected.raise();
+    };
+
+    //function to reset the element style on mouseout
+    function dehighlight(props) {
+        // remove label
+        //d3.select(".infolabel")
+            //.remove();
+        //change stroke
+        var selected = d3.selectAll("." + props.state_abbr)
+            .attr("class", function () {
+                //get current list of classes for each element
+                let elemClasses = this.classList; 
+                //remove class "selected" from class list
+                elemClasses.remove("selected")
+                return elemClasses
+            })
+    };
+
+
+
+
+
+
+
 
 })();
