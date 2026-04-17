@@ -27,14 +27,14 @@ option {
 /***** map things: *****/
 /* us states */
 .state {
-    /*fill: #bdc7b3; */
+    fill: #666666; 
     stroke: #1b1a1a;
     stroke-width: 0.5px;
 }
 /* map frame */
 .map {
     border: thin solid #1b1a1a;
-    background:#494949; /*#d5dffc #d9dbd5 */
+    background:#666666; /*#d5dffc #d9dbd5 #494949*/
     margin: 1.5% 0 0 2.5%;
     float: left;
 }
@@ -43,13 +43,13 @@ option {
 /* chart - whole/outer frame */
 .chart {
     border: thin solid #1b1a1a;
-    background-color: #494949;
+    background-color: #666666;
     margin: 1.5% 2.5% 0 0;
     float: right;
 }
 /* chart - inner frame */
 .chartBackground {
-    fill: #494949
+    fill: #666666;
 }
 /* title */
 .chartTitle {
@@ -62,8 +62,8 @@ option {
 .labels {
     fill: #1f1c1c;
     font-family: sans-serif;
-    font-size: 0.33em;
-    font-weight: lighter;
+    font-size: 0.4em;
+    font-weight:bold;
 }
 /* y-axis */
 .axis path,
