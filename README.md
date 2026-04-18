@@ -4,3 +4,4 @@
 - Reveal new insights regarding notable outliers, anomalies, patterns, trends, correlations, and clusters to your heart's content.
 
 - I ran out of time to make it more ~responsive~. It also pains me that i did not add a ~legend~. oh. well.
+- probably, that's all the stuff it actually needed to do though ~~~~~~~~~~~
