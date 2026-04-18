@@ -4,7 +4,7 @@
 (function () { 
 
 	// define pseudo-global attributes in pseudo-global scope:
-	var attrArray = ["Rate_All","Rate_WT","Ratio_WT_ST","Rate_BK","Ratio_BK_ST","Ratio_BK_WT"]; 
+	var attrArray = ["Total Incarceration Rate","White Incarceration Rate","Black Incarceration Rate","Incarceration Ratio: White to Total","Incarceration Ratio:  Black to Total","Incarceration Ratio: Black to White"]; 
 	var expressed = attrArray[0]; // set default to first attribute
         // chart dimensions:
 	    var chartWidth = window.innerWidth * 0.45,
@@ -56,7 +56,7 @@
                 statesData = data[1];
 
             // translate topojson:
-            // still not sure what my plan is for AK and HI yet - remove or make them containers.. ugh
+            // alas, Alaska and Hawaii didn't make the cut (rip)
             var States = topojson.feature(statesData, statesData.objects.usStates).features;
             
             // calling ea fx below:
@@ -112,9 +112,10 @@
             d3.min(data, function(d) { return parseFloat(d[expressed]); }),
             d3.max(data, function(d) { return parseFloat(d[expressed]); })
         ];
-        colorScale.domain(minmax);
+        colorScale.domain(minmax)
 
-        return colorScale;
+        return colorScale
+        colorScale.style("opactiy" , 0.9)
     };
 
     // fill states by color scale: (callback fx)
@@ -130,8 +131,8 @@
 			})
 			.attr("d", path)
 			.style("fill", function (d) {
-				var value = d.properties[expressed];                        	
-				return colorScale(d.properties[expressed]);             
+				var value = d.properties[expressed]                        	
+				return colorScale(d.properties[expressed])           
 			})    
             .on("click", function(event, d){
                 highlight(d.properties);
@@ -253,7 +254,6 @@
             .on("mouseout", function(event, d){
                 dehighlight(d);
             })
-            //.on("click", moveLabel);
 
         // make bar labels -> state names w/ update fx: 
         var labels = chart.selectAll(".labels") // these look bad but idc rn
@@ -270,10 +270,10 @@
 
         // chart title: 
         var chartTitle = chart.append("text")
-            .attr("x", chartInnerWidth/5)
-            .attr("y", chartHeight/10)
+            .attr("x", chartInnerWidth/7)
+            .attr("y", chartHeight/15)
             .attr("class", "chartTitle") // define class
-            .text(expressed + " by State");	
+            .text(expressed + " Per State");	
 
         // y-axis: 
         var yaxis = chart.append("g")
@@ -325,7 +325,7 @@
 
         // set title by current attribute:
         var chartTitle = d3.select(".chartTitle")
-            .text(expressed + " by State");
+            .text(expressed + " Per State");
         // set y-axis by current attribute scale:
         var yaxis = d3.select(".axis") 
             .attr("transform", translate)
@@ -339,7 +339,7 @@
             .remove();
         // reset to current label:
         setLabel(props)
-
+        
         // style by class:
         var selected = d3.selectAll("." + props.state_abbr)
             .attr("class", function (d) {
@@ -347,7 +347,9 @@
                 let elemClasses = this.classList;
                 // add "selected": 
                 elemClasses += " selected"; // define class
-                return elemClasses;
+                d3.selectAll("." + props.state_abbr)
+                    .style("opacity", 1.0)
+                return elemClasses
             })
         // raises selected element: (consistent boarders, etc.)
         selected.raise();
@@ -357,7 +359,7 @@
     function dehighlight(props) {
         // remove previous label:
         d3.select(".infolabel")
-            .remove();
+            .remove()
 
         // un-style by class:
         var selected = d3.selectAll("." + props.state_abbr)
@@ -366,16 +368,34 @@
                 let elemClasses = this.classList; 
                 //remove class "selected" from class list
                 elemClasses.remove("selected")
+                d3.selectAll("." + props.state_abbr)
+                    .style("opacity", 0.85)
                 return elemClasses
             })
     };
 
     // attribute value pop-ups: (highlight fx)
     function setLabel(props){
-
-        // label content:
-        var labelAttribute = "<h1>" + props[expressed] +
-            "</h1><b>" + expressed + "</b>";
+        // label content: 
+        // set conditional units by expressed attributes:
+        if (expressed.includes("Total Incarceration"))
+            unit = "";
+        if (expressed.includes("White"))
+            unit = "white";
+        if (expressed.includes("Black"))
+            unit = "black";
+        if (expressed.includes("to Total"))
+            unit2 = "total rate for the state";
+        if (expressed.includes("to White"))
+            unit2 = "rate for white people";
+        // set label content by metric: 
+        var labelAttribute
+        if (expressed.includes("Rate"))
+            labelAttribute =  "In " + props.state_abbr + " there are <b>" + props[expressed] + "</b> total "
+                + unit + " people incarcerated per 100,000 " + unit + " residents";
+        if (expressed.includes("to")) 
+            labelAttribute =  "In " + props.state_abbr + " the incarceration rate for " + unit + " people is <b>" 
+                + props[expressed] + "</b> times the " + unit2;
 
         // make infolabel div:
         var infolabel = d3.select("body")
@@ -391,7 +411,7 @@
         .width;
         // (x,y) pos var: 
         var x1 = event.clientX + 10,
-            y1 = event.clientY - 75,
+            y1 = event.clientY - 25,
             x2 = event.clientX - labelWidth - 10,
             y2 = event.clientY + 25;
         // set (x,y) relative to event loc: (adjust for overflow)

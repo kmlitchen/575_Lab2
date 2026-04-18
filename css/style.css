@@ -1,16 +1,17 @@
 
 /***** web background things: *****/
-/* page background */
+/* page background: */
 body {
-  background-color: #d8d7c7; 
+  background-color: #e7e4df; 
 }
 
 /***** dropdown things: *****/
 .dropdown {
     position: absolute;
-    background-color:#666666;
-    top: 30px;
-    left: 40px;
+    background-color:#e7e4dff0;
+    opacity: 0.85;
+    top: 6%;
+    left: 4%;
     z-index: 10;
     font-family: sans-serif;
     font-size: 1em;
@@ -19,54 +20,65 @@ body {
     border: 1.5px solid #1f1c1c;
     box-shadow: 2px 2px 2px #1f1c1c46;
 }
-
 option {
-    font-weight: normal;
+    background-color: #e7e4df;
 }
 
-
 /***** map things: *****/
-/* us states */
+/* map -> states: */
 .state {
     fill: #666666; 
     stroke: #1b1a1a;
     stroke-width: 0.25px;
+    opacity: 0.85
 }
-/* map frame */
+/* map -> invisible alaska (this was faster than making a new topojson ~ Hawaii's still out there somewhere) */
+.state.AK{
+    fill:none;
+    stroke:none
+}
+/* map -> frame: */
 .map {
-    border: thin solid #1b1a1a;
+    border: thin, solid #1b1a1a;
+    border-radius: 0.5%;
     background:#666666; /*#d5dffc #d9dbd5 #494949*/
+    box-shadow: 0.5vw 0.5vw 0.5vw #1f1c1c46;
     margin: 1.5% 0 0 2.5%;
     float: left;
 }
 
 /***** chart things: *****/
-/* chart - whole/outer frame */
+/* chart -> outer frame: */
 .chart {
-    border: thin solid #1b1a1a;
+    border: 1px, solid #1b1a1a;
+    border-radius: 0.5%;
     background-color: #666666;
+    box-shadow: 0.5vw 0.5vw 0.5vw #1f1c1c46;
     margin: 1.5% 2.5% 0 0;
     float: right;
 }
-/* chart - inner frame */
+/* chart -> inner frame: */
 .chartBackground {
     fill: #666666;
 }
-/* title */
+/* chart -> title: */
 .chartTitle {
     fill: #1f1c1c;
     font-family: sans-serif;
     font-size: 1em;
     font-weight: bold;
 }
-/* state labels */
+/* chart -> state name labels */
 .labels {
     fill: #1f1c1ccc;
     font-family: sans-serif;
     font-size: 0.4em;
     font-weight:bold;
 }
-/* y-axis */
+.bars{
+    opacity: 0.85;
+}
+/* chart -> y-axis */
 .axis path,
 .axis line {
     fill: none;
@@ -81,7 +93,7 @@ option {
 }
 
 /***** selection things: *****/
-/* select */
+/* on-selection -> element style */
 .selected {
     stroke: #352e2a;
     stroke-width: 1.5px;
@@ -89,21 +101,22 @@ option {
     font-size: 0.4em;
     font-weight:bold;
 }
-
+/* on-selection -> labels: */
 .infolabel {
     position: absolute;
-    height: 50px;
-    min-width: 100px;
-    color: #fff;
-    background-color: #000;
-    border: solid thin #fff;
-    padding: 5px 10px;
+    background-color: #e7e4dff0;
+    min-width: 5%;
+    max-width: 18%;
     top: -75px;
+    z-index: 10;
+    padding: 0.5% 0.5% 0.5% 0.5%;
+    border: 1.5px solid #1f1c1c;
+    border-radius: 0.5%;
+    box-shadow: 4px 4px 4px #1f1c1c46;
+    font-family: sans-serif;
+    font-size: 0.7em;
+    font-weight:bold;
+    color: #1f1c1c; 
+    place-items: center;
 }
-
-.infolabel h1 {
-    margin: 0 20px 0 0;
-    padding: 0;
-    display: inline-block;
-    line-height: 1em;
-}
+    
