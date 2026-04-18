@@ -1,27 +1,62 @@
 
-/***** web background things: *****/
+/***** web background classes: *****/
 /* page background: */
 body {
-  background-color: #e7e4df; 
+  background-color: #ebe1d9; 
+}
+.header {
+    margin:0.5%;
+    text-align: center;
+    font-size:xx-large;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 700;
+    color: #661c13
+}
+.sub-header {
+    margin: 0.5%;
+    text-align: center;
+    font-size:large;
+    font-family: Georgia;
+    font-style: oblique;
+    color: #440709;
+}
+/* for anchoring the drop-down */
+.drop { 
+    display: grid;
+    place-items: center;
+}
+.body {
+    margin: auto;
+    font-size:medium;
+    font-family: Georgia;
+    color: #440709;
+    display: inline-block
+
+}
+.indent{
+    margin-left: 2.5%; /*indent the whole div w/ a class */
+    margin-right: 2%;
 }
 
 /***** dropdown things: *****/
 .dropdown {
-    position: absolute;
-    background-color:#e7e4dff0;
+    position:relative;
+    background-color:#66666677;
     opacity: 0.85;
-    top: 6%;
-    left: 4%;
+    margin: auto;
     z-index: 10;
     font-family: sans-serif;
-    font-size: 1em;
+    font-size: 0.8em;
     font-weight: bold;
     padding: 2px;
     border: 1.5px solid #1f1c1c;
     box-shadow: 2px 2px 2px #1f1c1c46;
+    border-radius: 1%;
+    display: grid;
+    place-items: center;
 }
 option {
-    background-color: #e7e4df;
+    background-color: #66666677;
 }
 
 /***** map things: *****/
@@ -43,7 +78,7 @@ option {
     border-radius: 0.5%;
     background:#666666; /*#d5dffc #d9dbd5 #494949*/
     box-shadow: 0.5vw 0.5vw 0.5vw #1f1c1c46;
-    margin: 1.5% 0 0 2.5%;
+    margin: 0 0 0 2.5%;
     float: left;
 }
 
@@ -54,7 +89,7 @@ option {
     border-radius: 0.5%;
     background-color: #666666;
     box-shadow: 0.5vw 0.5vw 0.5vw #1f1c1c46;
-    margin: 1.5% 2.5% 0 0;
+    margin: 0 2.5% 0 0;
     float: right;
 }
 /* chart -> inner frame: */
@@ -92,7 +127,7 @@ option {
     font-size: 0.9em;
 }
 
-/***** selection things: *****/
+/***** highlighting things: *****/
 /* on-selection -> element style */
 .selected {
     stroke: #352e2a;
@@ -119,4 +154,10 @@ option {
     color: #1f1c1c; 
     place-items: center;
 }
-    
+
+
+
+
+
+
+
