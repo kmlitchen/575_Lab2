@@ -1,7 +1,10 @@
 # GEOG 575 Lab2 Repo - 
-- This repo concludes unit 3 w/ a bona fide choropleth map and also a multivariate coordinated vis.
-- Load enumerated information, allowing for the interactive identification, comparison, ranking, association, and delineation of multiple attributes as they vary across space.
-- Reveal new insights regarding notable outliers, anomalies, patterns, trends, correlations, and clusters to your heart's content.
 
-- I ran out of time to make it more ~responsive~. It also pains me that i did not add a ~legend~. oh. well.
-- probably, that's all the stuff it actually needed to do though ~~~~~~~~~~~
+~Verbatim From the Assignment: 
+- Create a **bar chart** or alternative data visualization that clearly expresses the attribute values shown on the choropleth map and is classed using your choropleth classification scheme.
+- The **bar chart** or other main data graphic draws correctly; visual elements (bars, etc.) are positioned logically to help the user create meaning from the data; explanatory elements (titles, labels, etc.) appear where they are necessary or appropriate.
+
+~Things to Note:
+- **bar charts** are referenced in the rubric and the official LMS modules for this assignment and the assignment description does not specify that re-expression needs to be multi-dimensional
+- The base layer of the map (i.e. basemap) is the shape of each state in the lower U.S.
+- The x-axis is explained by each bar listing the state abbreviation; it's also in the title that attributes are "by state"
