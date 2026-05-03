@@ -69,18 +69,18 @@
             // html text at bottom of the page: (I got annoyed with styling)
             var webText = "<p class = body>" +
                 "<br> <b> Is Our Justice System Just? </b> <br>" +
-                    "Select an attribute from the drop-down menu and click on any grapic to retreive more detail. <br>" + 
+                    "Select an attribute from the drop-down menu and click on any graphic to retrieve  more detail. <br>" + 
                 "<br> <b> What Do You See? </b> <br>" +
                     "Racially disparate outcomes in our state prisons reflect an amalgamation of factors persisting throughout our criminal justice process. " + 
                     "Incarceration in prison is the result of a process that begins in encounters with law enforcement and progresses through stages of arrest, detention, bail, legal representation, sentencing, fines, and community supervision programs (probation and parole). " +
                     "Individual-level biases amongst communities, law enforcement, and judges, as well as institutional factors that systemically disadvantage black people, including harsh laws, minimum sentences, strict probation terms, and high fees create cumulative effects that " + 
                     "abjectly fail to equitably distribute justice, creating clearly racialized lines along which we delineate whose freedom we hold most dear. Note the following: " +
                         "<ul class = body>" + 
-                        "<li>Compare incarceration ratios for black versus white residents. Do any states incarcerate white residents at a lower rate than black residents? At a higher rate than their overall incarceration rate?  </li>" +
+                        "<li>Compare incarceration ratios for black versus white residents. Do any states incarcerate white residents at a higher rate than black residents? At a higher rate than their overall incarceration rate?  </li>" +
                         "<li>Compare the Black to White Incarceration Ratio to the Total Incarceration Rate. What geographic trends do you notice? How does this align with your regional expectations for cultural attitudes of anti-blackness? Of crime and punishment as a whole?" +
                         "<li>States throughout the Northeast are known for having relatively progressive criminal justice policies. Do current policies inherently seem to address racial disparity in the justice system?</li>" +
                         "<li>What institutional factors beyond those strictly present within the justice system may contribute to the trends seen here?</li>" +
-                        "<li>Explore the visualization. What other interesteing trends do you notice?</li>" +
+                        "<li>Explore the visualization. What other interesting trends do you notice?</li>" +
                         "</ul> <br>" +
                 "<p class = body> <br> <b> For More Information: </b> <br>" +
                     "Visit the <a href='https://www.prisonpolicy.org/' target='_blank'> Prison Policy Initiative Website.</a>" + 
